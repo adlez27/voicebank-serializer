@@ -9,15 +9,12 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="UTAU Voicebank YAML Serializer">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
 	<DockPanel>
 		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="20"/>
 		<StackPanel Margin="20">
-			<Button Margin="0,0,0,10">Serialize (voicebank to YAML)</Button>
-			<Button>Deserialize (YAML to voicebank)</Button>
+			<Button Command="{Binding Serialize}" Margin="0,0,0,10">Serialize (voicebank to YAML)</Button>
+			<Button Command="{Binding Deserialize}">Deserialize (YAML to voicebank)</Button>
 		</StackPanel>
 	</DockPanel>
+	
 </Window>
