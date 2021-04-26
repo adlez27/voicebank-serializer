@@ -48,13 +48,14 @@ namespace VoicebankSerializer.Models
                 }
                 else if (ext == ".bmp")
                 {
+                    vb.IconName = Path.GetFileNameWithoutExtension(filePath);
                     var img = new Bitmap(filePath);
-                    vb.Icon = new int[100, 100];
-                    for (var i = 0; i < 100; i++)
+                    vb.Icon = new int[10000];
+                    for (var x = 0; x < 100; x++)
                     {
-                        for (var j = 0; j < 100; j++)
+                        for (var y = 0; y < 100; y++)
                         {
-                            vb.Icon[i, j] = img.GetPixel(i, j).ToArgb();
+                            vb.Icon[x*100 + y] = img.GetPixel(x, y).ToArgb();
                         }
                     }
                 }
@@ -76,9 +77,34 @@ namespace VoicebankSerializer.Models
             }
         }
 
-        public void Deserialize()
+        public  void Deserialize()
         {
-            // do the thing
+            var raw = File.ReadAllText(file);
+            var deserializer = new YamlDotNet.Serialization.Deserializer();
+            var vb = deserializer.Deserialize<VoiceBank>(raw);
+            var destination = Path.Combine(folder, vb.Name);
+            Encoding e = CodePagesEncodingProvider.Instance.GetEncoding(932);
+
+            Directory.CreateDirectory(destination);
+            File.WriteAllText(Path.Combine(destination, "readme.txt"), vb.ReadMe, e);
+            File.WriteAllText(Path.Combine(destination, "character.txt"), vb.Character, e);
+            File.WriteAllText(Path.Combine(destination, "prefix.map"), vb.PrefixMap, e);
+            File.WriteAllText(Path.Combine(destination, "oto.ini"), vb.Config, e);
+
+            var img = new Bitmap(100, 100);
+            for (var x = 0; x < 100; x++)
+            {
+                for (var y = 0; y < 100; y++)
+                {
+                    img.SetPixel(x, y, Color.FromArgb(vb.Icon[x*100 + y]));
+                }
+            }
+            img.Save(Path.Combine(destination, vb.IconName + ".bmp"));
+
+            foreach(var audio in vb.Recordings)
+            {
+                audio.Write(destination);
+            }
         }
     }
 }

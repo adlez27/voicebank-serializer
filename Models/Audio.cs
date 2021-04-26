@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManagedBass;
+using System;
 using System.IO;
 
 namespace VoicebankSerializer.Models
@@ -10,13 +11,17 @@ namespace VoicebankSerializer.Models
 
         public void Read(string path)
         {
-            byte[] rawBytes = File.ReadAllBytes(path);
-            Data = new ArraySegment<byte>(rawBytes, 46, rawBytes.Length - 46).Array;
+            Data = File.ReadAllBytes(path);
         }
 
         public void Write(string path)
         {
-            // write data to path
+            var format = new WaveFormat(44100, 16, 1);
+            using (FileStream fs = File.Create(Path.Combine(path, Name + ".wav")))
+            using (WaveFileWriter wfw = new WaveFileWriter(fs, format))
+            {
+                wfw.Write(Data, Data.Length);
+            }
         }
     }
 }
