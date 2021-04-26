@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using System;
 using System.Collections.Generic;
+using VoicebankSerializer.Models;
 
 namespace VoicebankSerializer.ViewModels
 {
@@ -19,9 +20,10 @@ namespace VoicebankSerializer.ViewModels
             "What the fuck?",
             "This is a terrible idea.",
             "Why are you using this?",
-            "For the lols",
-            "Bruh what are you doing",
-            "Unsexy but you do you"
+            "For the lols.",
+            "Bruh what are you doing?",
+            "Unsexy, but you do you.",
+            "This is a mistake."
         };
         public string Greeting
         {
@@ -58,7 +60,8 @@ namespace VoicebankSerializer.ViewModels
                 }
                 else
                 {
-                    // pass selectedFolder and exportFile to a serializer
+                    var serializer = new Serializer(selectedFolder, exportFile);
+                    serializer.Serialize();
                 }
             }
         }
@@ -88,7 +91,8 @@ namespace VoicebankSerializer.ViewModels
                 }
                 else
                 {
-                    // pass selectedFile and exportFolder to a deserializer
+                    var serializer = new Serializer(exportFolder, selectedFile[0]);
+                    serializer.Deserialize();
                 }
             }
         }
