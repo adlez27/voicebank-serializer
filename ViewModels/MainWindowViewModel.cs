@@ -6,6 +6,14 @@ namespace VoicebankSerializer.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting => "Welcome to Avalonia!";
+        private string[] greetings = { "What the fuck?", "This is a terrible idea.", "Why are you using this?", "For the lols" };
+        public string Greeting
+        {
+            get
+            {
+                var rand = new Random();
+                return greetings[rand.Next(greetings.Length)];
+            }
+        }
     }
 }
